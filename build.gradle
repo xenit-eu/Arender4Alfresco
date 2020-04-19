@@ -1,0 +1,124 @@
+plugins {
+    id 'java'
+    id 'eu.xenit.amp' version '1.0.1'
+    id 'eu.xenit.alfresco' version '1.0.1'
+    id "maven-publish"
+    id "signing"
+    id "idea"
+    
+
+}
+
+description = 'Arender amp for Alfresco'
+group = 'eu.xenit.transformers'
+
+
+def baseVersion = '1.0.0'
+def branchName = System.env.TRAVIS_BRANCH
+def isRelease = branchName != null && branchName.startsWith("release")
+if (isRelease)
+    version = "$baseVersion"
+else
+    version = "$baseVersion-SNAPSHOT"
+
+
+repositories {
+    mavenCentral()
+    alfrescoPublic()
+}
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    testCompile "org.mockito:mockito-core:2.24.0"
+    alfrescoProvided("org.alfresco:alfresco-repository:5.1.e"){
+        exclude group: "org.springframework.social"
+    }
+
+    testImplementation(
+            'junit:junit:4.12',
+            'org.junit.jupiter:junit-jupiter-api:5.4.2'
+    )
+    testRuntime(
+            'org.junit.jupiter:junit-jupiter-engine:5.4.2',
+            'org.junit.vintage:junit-vintage-engine:5.4.2'
+    )
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+publishing {
+    publications {
+        all {
+            pom {
+                url = 'https://github.com/xenit-eu/Arender4Alfresco'
+                name = 'Arender4Alfresco'
+                description = "This project aims to allow alfresco to connect and use a remote arender server "
+
+                scm {
+                    connection = 'scm:git:git@github.com:xenit-eu/Arender4Alfresco.git'
+                    developerConnection = 'scm:git:git@github.com:xenit-eu/Arender4Alfresco.git'
+                    url = 'https://github.com/xenit-eu/Arender4Alfresco.git'
+                }
+
+                developers {
+                    developer {
+                        id = "xenit"
+                        name = "Xenit Solutions NV"
+                    }
+                }
+
+                licenses {
+                    license {
+                        name = 'GNU Lesser General Public License v3.0'
+                        url = 'https://www.gnu.org/licenses/lgpl-3.0.txt'
+                    }
+                }
+            }
+        }
+        mavenJava(MavenPublication) {
+            artifact amp
+            artifact sourcesJar
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            
+            credentials {
+                username = System.env.usernameSonatype
+                password = System.env.passwordSonatype
+            }
+        }
+    }
+}
+
+signing {
+    required { gradle.taskGraph.hasTask("publish") && ! version.endsWith('SNAPSHOT') }
+    sign publishing.publications.mavenJava
+}
+gradle.taskGraph.whenReady { graph ->
+    if (graph.hasTask(publish) && ! version.endsWith('SNAPSHOT')) {
+        if ((System.env.SIGN_KEY_ID == null) || (System.env.SIGN_SECRET_KEY_RINGFILE == null) || (System.env.SIGN_PASSWORD == null)) {
+            throw new GradleException('You need to provide signing params in order to sign artifacts')
+        } else {
+            ext."signing.keyId" = (System.env.SIGN_KEY_ID != null ? System.env.SIGN_KEY_ID : '')
+            ext."signing.secretKeyRingFile" = (System.env.SIGN_SECRET_KEY_RINGFILE != null ? System.env.SIGN_SECRET_KEY_RINGFILE : '')
+            ext."signing.password" = (System.env.SIGN_PASSWORD != null ? System.env.SIGN_PASSWORD : '')
+        }
+    }
+}
+
+
