@@ -1,0 +1,27 @@
+language: java
+dist: trusty
+matrix:
+  include:
+    - os: linux
+      jdk: oraclejdk8
+      env:
+        - PUBLISH_USER=xenit
+        - SIGN_KEY_ID=CDE3528F
+        - SIGN_SECRET_KEY_RINGFILE=secring.gpg
+      before_install:
+        - chmod +x ./gradlew
+        - openssl aes-256-cbc -K $encrypted_c6215021d27f_key -iv $encrypted_c6215021d27f_iv -in secring.gpg.enc -out secring.gpg -d
+      script:
+        - ./gradlew check
+env:
+  global:
+    - secure: zLKKzus1ECXxgBPXgy4r4v1j5Ix0xubj6n9YEIyIGi+/+ZLTMJSAGBAxh+vJh1VvntaxOc+fgfSqfyetvPIuW6JlPQEQoNJzMBVN+voNAh25OpQ6goOiL6XqL66SbAfEvXRXBLQ1c1p9wHo9fWFlsueFp5cyOdfwE60oBsvAs0PqrxMnSA4vs/4qDwpS3V2qfkVtYGAErDXWJcRH97I4/ABBs+IbRCvFUd5fuYMGj7PTt/+qyePW1qDubm0ZvNA1nFSZbIyjAD2gNu9XyqmyDfrJxEUgOx2xfOJWjp7flZpyZaHJ7FnMJFBckP1BSz6Gf8sPo7wX49s5fa3YIU16R6UhS9mrmcekp+MyESYTaK5bO5+mh+RAsEQXY2V4039Myoz705z2F1hSV81bwjhQgrTvYu7CuwSKPGAnXYwyp6/oki0xtTV+rucvqD0nWIN/5MXzEXA/0w/l6i4EiJ5Ewce890zq94fFhq52xcwMN2wbxi1UW8MfhScObTOE5dBJOlGNHhM4LakWymnBUoE6jc0D6NITN+CBwSgemz7yfuhsMYSk63cML9msKCxZ3+M/95JB6jGFKHYGjrSehWpO8pOxF/JiZja1f2bZFa0FGrv2NCN+zym7ggZ3PKENu+DSoqiH4kLC0HZ9AGx3vbRMl5H87gv7F8eF7drfw4OnTgU=
+    - secure: Itiga+qs20Mzb3koESOH7ONT8aHwx5F1e/4nPtVlMZEG9YLgOaKC8IMQ0+ozbY2Z28jvEbFIok7SoCaXvO1A0H1HobKRphqA7hKOuMHxcAylTdHS8oVsL7H4NAeRn84RxXMSaEhSfrJq4uYARrOOFK/c85xDIsShxoucCYMPmyiQKpDwP3E5RXhwRM1FoBDrxCwsb/C2adbPMZCO0RnMs6jS1G60An1UPZiOEqmZ0/uWE2Xmqfmnl/VdZ55lOTfMT0NMS5Yd4DYk/R4v8twN0WdtZ4sinciCCibTAYFHnBKj0THUAKke/mvUVpdVieFreCZbR2QN9ngZw3sRr+3rUYNjx4B4ukRfzYaNSS0aXH5eGXq6Db3ogAXQD/Shqziq6n4ll4c5KaXlNMFMLI5yWfIOTub/vcUbTvmOOPrwqq+asZKBfdcMDpOT83vF2qnF4dhId2I7IXpQngaC7RTrZ2lMdNsBkzaS3DaD8UPSx2yYZPhxZyeA56ZR3O5+Bl6GExXVGAyYgn5sM25UCdR7VdqkU/ADqesGQfwHwMpxtck6fX1XFMKehwgB9HGpB81i5ZBBkzPFn6gsVlvEtrHN+F9i+/jcMFaBLuIrgduH7LMqMPQQwdFV569YJHls/RnFpdF+bQ7oVsv3LG+W0EX5wrncaAnqOKfk/eY+OFC0iHs=
+deploy:
+  skip_cleanup: true
+  provider: script
+  on:
+    branch: release
+  script: ./gradlew publish
+
+

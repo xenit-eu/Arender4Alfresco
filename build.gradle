@@ -22,16 +22,6 @@ else
 
 repositories {
     mavenCentral()
-    maven {
-        url 'https://artifactory.arondor.cloud/artifactory/arondor-release'
-        credentials {
-
-            username property("arondor.artifactory.username")
-            password property("arondor.artifactory.password")
-
-
-        }
-    }
     alfrescoPublic()
 }
 
@@ -44,28 +34,26 @@ test {
     useJUnitPlatform()
 }
 
-    dependencies {
-        compile group: 'org.alfresco', name: 'alfresco-platform-distribution', version: '5.1.e', ext: 'pom'
-        compile "com.arondor.arender:arondor-arender-client-javarest:4.0.3"
-        testCompile "org.mockito:mockito-core:2.24.0"
-        alfrescoProvided("org.alfresco:alfresco-repository:5.1.e")
+dependencies {
+    compile group: 'org.alfresco', name: 'alfresco-platform-distribution', version: '5.1.e', ext: 'pom'
+    testCompile "org.mockito:mockito-core:2.24.0"
+    alfrescoProvided("org.alfresco:alfresco-repository:5.1.e")
 
-        testImplementation(
-                'junit:junit:4.12',
-                'org.junit.jupiter:junit-jupiter-api:5.4.2'
-        )
-        testRuntime(
-                'org.junit.jupiter:junit-jupiter-engine:5.4.2',
-                'org.junit.vintage:junit-vintage-engine:5.4.2'
-        )
-    }
+    testImplementation(
+            'junit:junit:4.12',
+            'org.junit.jupiter:junit-jupiter-api:5.4.2'
+    )
+    testRuntime(
+            'org.junit.jupiter:junit-jupiter-engine:5.4.2',
+            'org.junit.vintage:junit-vintage-engine:5.4.2'
+    )
+}
 
 
 amp {
- 
-}   
 
-/*
+}
+
 
 publishing {
     publications {
@@ -94,12 +82,15 @@ publishing {
                 }
             }
         }
+        mavenJava(MavenPublication) {
+            artifact amp
+        }
     }
     repositories {
         maven {
             def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
             def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-            url = version.isRelease() ? releasesRepoUrl : snapshotsRepoUrl
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
 
             credentials {
                 username = project.hasProperty('publish_username') ? project.publish_username : ''
@@ -111,4 +102,4 @@ publishing {
 
 signing {
     sign publishing.publications.mavenJava
-}*/
+}

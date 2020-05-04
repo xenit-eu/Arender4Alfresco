@@ -3,8 +3,6 @@ package com.arondor.arender.alfresco.content.transformer;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
-
-import com.arondor.arender.viewer.common.rest.DocumentServiceRestClient;
 import org.alfresco.repo.content.transform.ContentTransformerWorker;
 import org.alfresco.service.cmr.repository.ContentReader;
 import org.alfresco.service.cmr.repository.ContentWriter;
@@ -12,36 +10,40 @@ import org.alfresco.service.cmr.repository.TransformationOptions;
 import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.arondor.viewer.client.api.document.DocumentId;
-import com.arondor.viewer.common.document.id.DocumentIdFactory;
-import com.arondor.viewer.rendition.api.document.DocumentAccessorSelector;
 
 public class ARenderContentTransformerWorker implements ContentTransformerWorker, InitializingBean
 {
-    private DocumentServiceRestClient restClient = new DocumentServiceRestClient();
 
-    private String arenderRenditionServerAddress = "http://localhost:8761/";
+    private final ContentTransformARenderRestClient restClient = new ContentTransformARenderRestClient();
+
+    private String arenderRenditionServerAddress = "https://rendition.saas.arender.io";
+    private String apiKey="f2280717-6d0a-4d25-9ada-c3616445c873";
+
+
+    public ARenderContentTransformerWorker() {
+        restClient.setAddress(arenderRenditionServerAddress);
+        restClient.setApiKey(apiKey);
+    }
+
 
     @Override
     public boolean isAvailable()
     {
-        return restClient.getWeatherPerformance() != -1;
+
+        return restClient.getWeatherPerformance() >= 0;
+
     }
 
     @Override
     public String getVersionString()
     {
-        return "1.0.0";
+        return "2.0.0";
     }
 
     @Override
     public boolean isTransformable(String sourceMimetype, String targetMimetype, TransformationOptions options)
     {
-        if (!"application/pdf".equals(targetMimetype))
-        {
-            return false;
-        }
-        return true;
+        return "application/pdf".equals(targetMimetype);
     }
 
     @Override
@@ -54,13 +56,12 @@ public class ARenderContentTransformerWorker implements ContentTransformerWorker
     @Override
     public void transform(ContentReader reader, ContentWriter writer, TransformationOptions options) throws Exception
     {
-        DocumentId uuid = DocumentIdFactory.getInstance().generate();
+        String uuid = UUID.randomUUID().toString();
         try (InputStream contentInputStream = reader.getContentInputStream();
                 OutputStream contentOutputStream = writer.getContentOutputStream())
         {
-            restClient.uploadDocument(uuid, null, UUID.randomUUID().toString(), contentInputStream);
-            try (InputStream inputStream = restClient.getDocumentAccessor(uuid, DocumentAccessorSelector.RENDERED)
-                    .getInputStream())
+            restClient.uploadDocument(uuid, contentInputStream);
+            try (InputStream inputStream = restClient.getInputStream(uuid, "RENDERED"))
             {
                 IOUtils.copy(inputStream, contentOutputStream);
             }
@@ -71,6 +72,7 @@ public class ARenderContentTransformerWorker implements ContentTransformerWorker
     public void afterPropertiesSet() throws Exception
     {
         restClient.setAddress(getArenderRenditionServerAddress());
+
     }
 
     public String getArenderRenditionServerAddress()
