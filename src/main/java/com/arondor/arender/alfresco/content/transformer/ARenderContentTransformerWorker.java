@@ -3,6 +3,7 @@ package com.arondor.arender.alfresco.content.transformer;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
+
 import org.alfresco.repo.content.transform.ContentTransformerWorker;
 import org.alfresco.service.cmr.repository.ContentReader;
 import org.alfresco.service.cmr.repository.ContentWriter;
@@ -10,28 +11,20 @@ import org.alfresco.service.cmr.repository.TransformationOptions;
 import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.beans.factory.InitializingBean;
 
-
 public class ARenderContentTransformerWorker implements ContentTransformerWorker, InitializingBean
 {
-
     private final ContentTransformARenderRestClient restClient = new ContentTransformARenderRestClient();
 
-    private String arenderRenditionServerAddress = "https://rendition.saas.arender.io";
-    private String apiKey="f2280717-6d0a-4d25-9ada-c3616445c873";
-
+    private String arenderRenditionServerAddress = "http://localhost:8761/";
 
     public ARenderContentTransformerWorker() {
         restClient.setAddress(arenderRenditionServerAddress);
-        restClient.setApiKey(apiKey);
     }
-
 
     @Override
     public boolean isAvailable()
     {
-
         return restClient.getWeatherPerformance() >= 0;
-
     }
 
     @Override
@@ -58,7 +51,7 @@ public class ARenderContentTransformerWorker implements ContentTransformerWorker
     {
         String uuid = UUID.randomUUID().toString();
         try (InputStream contentInputStream = reader.getContentInputStream();
-                OutputStream contentOutputStream = writer.getContentOutputStream())
+             OutputStream contentOutputStream = writer.getContentOutputStream())
         {
             restClient.uploadDocument(uuid, contentInputStream);
             try (InputStream inputStream = restClient.getInputStream(uuid, "RENDERED"))
@@ -72,7 +65,6 @@ public class ARenderContentTransformerWorker implements ContentTransformerWorker
     public void afterPropertiesSet() throws Exception
     {
         restClient.setAddress(getArenderRenditionServerAddress());
-
     }
 
     public String getArenderRenditionServerAddress()

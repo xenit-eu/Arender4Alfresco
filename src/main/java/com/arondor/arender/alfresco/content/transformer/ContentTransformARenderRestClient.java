@@ -19,8 +19,6 @@ public class ContentTransformARenderRestClient
 
     private String address;
 
-    private String apiKey;
-
     private final RestTemplate template;
 
     // upgrade transfer partial size, 8MB at a time
@@ -49,10 +47,6 @@ public class ContentTransformARenderRestClient
         }
     }
 
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
-
     public void setAddress(String address)
     {
         if (!StringUtils.isEmpty(address))
@@ -71,22 +65,11 @@ public class ContentTransformARenderRestClient
 
     public void uploadDocument(String uuid, InputStream contentInputStream) throws IOException
     {
-
-        //TheOriginal (when executing this and whendisabling the weather check , i get 502 bad gateway error message
-        //i tried to match the url here to the provided one in the documentation here :
-        // https://knowledge.arender.io/how-to-convert-documents-in-arender-rendition-saas?utm_campaign=Play%20%234%202019%20-%20Cloud&utm_source=hs_automation&utm_medium=email&utm_content=78224532&_hsenc=p2ANqtz-_0_wHO2I2LF3zRPnnfM7oxVo2kQmNBMpK5flVMAtSRKwpcFwUP-LxUyPZErLQyKnuBLweU0LnXH8FBIHlj35YtUGYIsg&_hsmi=78224532
-        /*
-        *   ResponseEntity<Void> voidResponseEntity = template.postForEntity(
+        // start partial loading
+        ResponseEntity<Void> voidResponseEntity = template.postForEntity(
                 UriComponentsBuilder.fromHttpUrl(address + "document/" + uuid + "/startPartialLoading?mimeType=null"
                         + "&documentTitle=" + uuid + "&contentSize=-1").build().toString(),
                 null, Void.class);
-        * */
-        // start partial loading
-        ResponseEntity<Void> voidResponseEntity = template.postForEntity(
-                UriComponentsBuilder.fromHttpUrl(address + "document/" + uuid + "/upload/?api-key="+apiKey
-                        + "&documentTitle=" + uuid + "&mimeType=null").build().toString(),
-                null, Void.class);
-
         if (voidResponseEntity.getStatusCode() == HttpStatus.OK)
         {
             // continue with partial loading

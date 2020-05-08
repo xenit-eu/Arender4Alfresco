@@ -21,7 +21,7 @@ public class ARenderContentTransformerWorkerTest
         ContentReader mockReader = Mockito.mock(ContentReader.class);
         ContentWriter mockWriter = Mockito.mock(ContentWriter.class);
 
-      //  Assert.assertTrue(contentTransformer.isAvailable());
+        Assert.assertTrue(contentTransformer.isAvailable());
 
         Mockito.doAnswer(new Answer<InputStream>()
         {
@@ -30,7 +30,7 @@ public class ARenderContentTransformerWorkerTest
             public InputStream answer(InvocationOnMock invocation) throws Throwable
             {
                 return new FileInputStream(
-                        "src/main/resources/alfresco-global.properties");
+                        "src/main/resources/alfresco/module/arender-custom-content-transformer/alfresco-global.properties");
             }
         }).when(mockReader).getContentInputStream();
 
