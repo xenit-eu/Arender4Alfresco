@@ -6,8 +6,7 @@
 
     <!-- The All -> PDF through ARender transformer Worker -->
     <bean id="transformer.worker.arender2pdf" class="com.arondor.arender.alfresco.content.transformer.ARenderContentTransformerWorker">
-        <property name="arenderARenderSaaSUrl" value="https://rendition.saas.arender.io/test/" />
-        <property name="aRenderRenditionApiKey" value="${content.transformer.arender4alfresco.baseApiKey}" />
+        <property name="arenderRenditionServerAddress" value="http://localhost:8761/" />
     </bean>
 
     <!-- The All -> PDF ARender transformer -->
