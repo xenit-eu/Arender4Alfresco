@@ -11,8 +11,6 @@ matrix:
         - SIGN_SECRET_KEY_RINGFILE=secring.gpg
       before_install:
         - chmod +x ./gradlew
-      script:
-        - ./gradlew check
 services:
   - docker
 cache:
