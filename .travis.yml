@@ -5,14 +5,8 @@ matrix:
   include:
     - os: linux
       jdk: oraclejdk8
-      env:
-        - PUBLISH_USER=xenit
-        - SIGN_KEY_ID=CDE3528F
-        - SIGN_SECRET_KEY_RINGFILE=secring.gpg
       before_install:
         - chmod +x ./gradlew
-services:
-  - docker
 cache:
   directories:
     - $HOME/.gradle/caches/
@@ -20,10 +14,6 @@ cache:
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
-install:
-  - "echo 'buildDate='$(date +%s) >> ~/.gradle/gradle.properties"
-
 deploy:
   skip_cleanup: true
   provider: script
