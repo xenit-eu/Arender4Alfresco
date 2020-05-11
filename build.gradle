@@ -9,6 +9,7 @@ plugins {
 }
 
 description = 'Arender amp for Alfresco'
+group = 'eu.xenit.transformers'
 
 
 def baseVersion = '1.0.0'
