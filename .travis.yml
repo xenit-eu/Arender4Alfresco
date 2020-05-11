@@ -8,10 +8,11 @@ matrix:
     env:
     - PUBLISH_USER=xenit
     - SIGN_KEY_ID=CDE3528F
-    - SIGN_SECRET_KEY_RINGFILE=secring.gpg
+    - SIGN_SECRET_KEY_RINGFILE=secring_xenit.gpg
     before_install:
     - chmod +x ./gradlew
-    - openssl aes-256-cbc -K $encrypted_6afd0fc9428e_key -iv $encrypted_6afd0fc9428e_iv -in secring.gpg.enc -out secring.gpg -d
+    - openssl aes-256-cbc -K $encrypted_3472f6e1405d_key -iv $encrypted_3472f6e1405d_iv -in secring_xenit.gpg.enc -out secring_xenit.gpg -d
+
     script:
       - ./gradlew check
 
