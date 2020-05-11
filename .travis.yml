@@ -26,5 +26,5 @@ deploy:
   skip_cleanup: true
   provider: script
   on:
-    branch: release
+    branch: master
   script: ./gradlew publish
