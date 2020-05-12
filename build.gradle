@@ -96,8 +96,8 @@ publishing {
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
 
             credentials {
-                username = project.hasProperty('publish_username') ? project.publish_username : ''
-                password = project.hasProperty('publish_password') ? project.publish_password : ''
+                username property("eu.xenit.sonatype.username")
+                password property("eu.xenit.sonatype.password")
             }
         }
     }
@@ -107,3 +107,4 @@ signing {
     required { gradle.taskGraph.hasTask("publish") }
     sign publishing.publications.mavenJava
 }
+
