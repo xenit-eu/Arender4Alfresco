@@ -42,7 +42,6 @@ public class ARenderContentTransformerWorker implements ContentTransformerWorker
     @Override
     public String getComments(boolean available)
     {
-        // no comments yet to add
         return null;
     }
 
