@@ -15,7 +15,7 @@ public class ARenderContentTransformerWorker implements ContentTransformerWorker
 {
     private final ContentTransformARenderRestClient restClient = new ContentTransformARenderRestClient();
 
-    private String arenderRenditionServerAddress = "http://localhost:8761/";
+    private String arenderRenditionServerAddress = "http://10.233.18.244:3389/";
 
     public ARenderContentTransformerWorker() {
         restClient.setAddress(arenderRenditionServerAddress);
