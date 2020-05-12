@@ -57,6 +57,8 @@ amp {
 
 }
 
+def username = hasProperty('SONATYPEUSERNAME') ? SONATYPEUSERNAME : System.getenv('SONATYPEUSERNAME')
+def password = hasProperty('SONATYPEPASSWORD') ? SONATYPEPASSWORD : System.getenv('SONATYPEPASSWORD')
 
 publishing {
     publications {
@@ -96,8 +98,8 @@ publishing {
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
 
             credentials {
-                username property("eu.xenit.sonatype.username")
-                password property("eu.xenit.sonatype.password")
+                username =username
+                password =password
             }
         }
     }
