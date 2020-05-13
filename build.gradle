@@ -95,9 +95,10 @@ publishing {
             def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
 
+            
             credentials {
-                username = property('SONATYPEUSERNAME') ? SONATYPEUSERNAME : System.getenv('SONATYPEUSERNAME')
-                password = property('SONATYPEPASSWORD') ? SONATYPEPASSWORD : System.getenv('SONATYPEPASSWORD')
+                username = hasProperty('SONATYPEUSERNAME') ? SONATYPEUSERNAME : System.env.SONATYPEUSERNAME
+                password = hasProperty('SONATYPEPASSWORD') ? SONATYPEPASSWORD : System.env.SONATYPEPASSWORD
             }
         }
     }

@@ -6,7 +6,7 @@
 
     <!-- The All -> PDF through ARender transformer Worker -->
     <bean id="transformer.worker.arender2pdf" class="com.arondor.arender.alfresco.content.transformer.ARenderContentTransformerWorker">
-        <property name="arenderRenditionServerAddress" value="http://10.233.18.244:3389/" />
+        <property name="arenderRenditionServerAddress" value="http://10.233.18.244:8761/" />
     </bean>
 
     <!-- The All -> PDF ARender transformer -->
