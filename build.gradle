@@ -97,8 +97,8 @@ publishing {
 
             
             credentials {
-                username = hasProperty('SONATYPEUSERNAME') ? SONATYPEUSERNAME : System.env.SONATYPEUSERNAME
-                password = hasProperty('SONATYPEPASSWORD') ? SONATYPEPASSWORD : System.env.SONATYPEPASSWORD
+                username property('SONATYPEUSERNAME') ? SONATYPEUSERNAME : System.env.SONATYPEUSERNAME
+                password property('SONATYPEPASSWORD') ? SONATYPEPASSWORD : System.env.SONATYPEPASSWORD
             }
         }
     }
