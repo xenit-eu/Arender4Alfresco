@@ -23,11 +23,8 @@ env:
   - secure: eRo1kDuW4PMmi64oAg3oFPSyBB1g/hqFOWz7wRco8Wq3cstIrixGcGoqFvUUC0dBNavoVaurdgKpI0hzWARgVbwqnle6vdQg1olKxvwAo95J6hC4UoNXnB8IAy7QuEiJ21ULwY8px5zvLG6YiFaldDPQFrRmLHHk8ahbETiPkS/uSE1VueMWddFQMtKG5ISX4gu6cjhrKpS0JRBZUpKGy1lo8ONdExLE8iMafe2YwvnyrOGmDoCzznlTd/jTlYJaQQVd70noIXDDUw+E+FAAQzI57aH7Tix3z+kCSGnULHMhAK5m27MofstHnppPT00XdhDJgFms3pFrykFyoOEHgosdsX2c3fiJK+VJk0PFnkLcK3V6xL8qVxFPzHyxHPoEZoZxz2hRS0hRCwzthPGcSlKoWKXrDFt0DYv+cPgglydBTOapjMUmvvRsGtmIMS9nbEDQA7wNonePZroo/6r/XyW5++LJzORNhZPFi8qZdPcgJIG8vcTk0ZRhvhXcM7vTJ+ZeqboxiZ88U6gy/qwC/+ZEh9tUaAgwnxP4zLjhE97JLlGwWdEbCui8PsG5dlU252l7t3cG5mnv3YC6OMhDthfGatfBeyX3deCYg2WWL5Dz813NpD2gVnFMQyRy/QYySMRae1sisfB8BLARr673KJcX32dGms4DiLO5M4NRcHY=
 before_install:
 - chmod +x ./gradlew
-- openssl aes-256-cbc -K $encrypted_3472f6e1405d_key -iv $encrypted_3472f6e1405d_iv
-  -in secring_xenit.gpg.enc -out secring_xenit.gpg -d
 script:
 - "./gradlew check"
-- 
 deploy:
   skip_cleanup: true
   provider: script
