@@ -96,8 +96,8 @@ publishing {
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
             
             credentials {
-                username = System.env.password
-                password = System.env.username
+                username = System.env.usernameSonatype
+                password = System.env.passwordSonatype
             }
         }
     }
