@@ -32,7 +32,6 @@ test {
 }
 
 dependencies {
-    testCompile "org.mockito:mockito-core:2.24.0"
     alfrescoProvided("org.alfresco:alfresco-repository:5.1.e"){
         exclude group: "org.springframework.social"
     }
