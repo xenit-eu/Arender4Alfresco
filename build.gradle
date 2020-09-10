@@ -22,6 +22,7 @@ sourceSets {
 configurations {
     integrationTestCompileClasspath.extendsFrom(compileClasspath)
     integrationTestRuntimeClasspath.extendsFrom(runtimeClasspath)
+    integrationTestRuntimeClasspath.extendsFrom(alfrescoProvided)
 }
 
 def baseVersion = '1.0.0'
@@ -46,6 +47,10 @@ task integrationTest(type: Test, group: "verification") {
     useJUnitPlatform()
     testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
+    onlyIf { project.hasProperty("arender.address") }
+    doFirst {
+        systemProperty("arender.address", project.property("arender.address"))
+    }
 }
 
 check.dependsOn(integrationTest);
@@ -64,13 +69,11 @@ dependencies {
         exclude group: "org.springframework.social"
     }
 
-    testImplementation(
-            'junit:junit:4.12',
+    integrationTestImplementation(
             'org.junit.jupiter:junit-jupiter-api:5.4.2'
     )
-    testRuntime(
+    integrationTestRuntime(
             'org.junit.jupiter:junit-jupiter-engine:5.4.2',
-            'org.junit.vintage:junit-vintage-engine:5.4.2'
     )
 }
 
