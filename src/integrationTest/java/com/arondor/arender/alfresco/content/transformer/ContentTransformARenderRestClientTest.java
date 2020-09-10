@@ -26,11 +26,11 @@ public class ContentTransformARenderRestClientTest {
         assertTrue(aRenderRestClient.getWeatherPerformance() > 0, "Weather performance should be larger than 0");
     }
 
-    @Test
-    public void testRenderSmallDocument() throws IOException {
+    private void renderDocument(String docName) throws IOException {
+
         UUID randomID = UUID.randomUUID();
         try (InputStream testDocument = ContentTransformARenderRestClientTest.class
-                .getResourceAsStream("lorem10.doc")) {
+                .getResourceAsStream(docName)) {
             aRenderRestClient.uploadDocument(randomID.toString(), testDocument, "application/msword");
         }
 
@@ -40,6 +40,16 @@ public class ContentTransformARenderRestClientTest {
             // Check that returned document starts with the PDF header
             assertArrayEquals("%PDF-".getBytes(Charsets.US_ASCII), bytes);
         }
+    }
+
+    @Test
+    public void testRenderSmallDocument() throws IOException {
+        renderDocument("lorem10.doc");
+    }
+
+    @Test
+    public void testRenderLargeDocument() throws IOException {
+        renderDocument("loremLarge.doc");
     }
 
 }
