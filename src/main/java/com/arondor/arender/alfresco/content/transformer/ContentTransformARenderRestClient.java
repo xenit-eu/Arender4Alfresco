@@ -3,12 +3,9 @@ package com.arondor.arender.alfresco.content.transformer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Collections;
 import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -64,7 +61,7 @@ public class ContentTransformARenderRestClient {
         this.address = address;
     }
 
-    public void uploadDocument(String uuid, InputStream contentInputStream, String mimeType, long contentSize)
+    public void uploadDocument(String uuid, InputStream contentInputStream, String mimeType)
             throws IOException {
         URI uploadUri = UriComponentsBuilder.fromHttpUrl(address
                 + "document/{uuid}/upload?mimeType={mimeType}&documentTitle={documentTitle}")
@@ -94,10 +91,10 @@ public class ContentTransformARenderRestClient {
                 .buildAndExpand(uuid, selector).toUri();
         ClientHttpRequest downloadRequest = clientHttpRequestFactory.createRequest(downloadUri, HttpMethod.GET);
         ClientHttpResponse downloadResponse = downloadRequest.execute();
-        if(downloadResponse.getStatusCode() != HttpStatus.OK) {
+        if (downloadResponse.getStatusCode() != HttpStatus.OK) {
             HttpStatus status = downloadResponse.getStatusCode();
             downloadResponse.close();
-            throw new IOException("Failed to download document: "+status);
+            throw new IOException("Failed to download document: " + status);
         }
         return downloadResponse.getBody();
     }

@@ -50,7 +50,7 @@ public class ARenderContentTransformerWorker implements ContentTransformerWorker
         String uuid = UUID.randomUUID().toString();
         try (InputStream contentInputStream = reader.getContentInputStream())
         {
-            restClient.uploadDocument(uuid, contentInputStream, reader.getMimetype(), reader.getSize());
+            restClient.uploadDocument(uuid, contentInputStream, reader.getMimetype());
             try (InputStream inputStream = restClient.getInputStream(uuid, "RENDERED"))
             {
                 writer.putContent(inputStream);
