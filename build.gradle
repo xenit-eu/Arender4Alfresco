@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'eu.xenit.amp' version '1.0.1'
     id 'eu.xenit.alfresco' version '1.0.1'
-    id "maven-publish"
+    id 'de.marcphilipp.nexus-publish' version '0.4.0'
     id "signing"
     id "idea"
 }
@@ -121,18 +121,16 @@ publishing {
             artifact sourcesJar
         }
     }
-    repositories {
-        maven {
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+}
 
-            credentials {
-                username = System.env.usernameSonatype
-                password = System.env.passwordSonatype
-            }
+nexusPublishing {
+    repositories {
+        sonatype {
+            username = System.env.usernameSonatype
+            password = System.env.passwordSonatype
         }
     }
+
 }
 
 signing {
