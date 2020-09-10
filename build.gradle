@@ -5,13 +5,24 @@ plugins {
     id "maven-publish"
     id "signing"
     id "idea"
-    
-
 }
 
 description = 'Arender amp for Alfresco'
 group = 'eu.xenit.transformers'
 
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+        }
+    }
+}
+
+configurations {
+    integrationTestCompileClasspath.extendsFrom(compileClasspath)
+    integrationTestRuntimeClasspath.extendsFrom(runtimeClasspath)
+}
 
 def baseVersion = '1.0.0'
 def branchName = System.env.TRAVIS_BRANCH
@@ -31,8 +42,25 @@ test {
     useJUnitPlatform()
 }
 
+task integrationTest(type: Test, group: "verification") {
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+check.dependsOn(integrationTest);
+
+pluginManager.withPlugin("idea") {
+    idea {
+        module {
+            testSourceDirs += sourceSets.integrationTest.java.sourceDirectories
+            testResourceDirs += sourceSets.integrationTest.resources.srcDirs
+        }
+    }
+}
+
 dependencies {
-    alfrescoProvided("org.alfresco:alfresco-repository:5.1.e"){
+    alfrescoProvided("org.alfresco:alfresco-repository:5.1.e") {
         exclude group: "org.springframework.social"
     }
 
@@ -95,7 +123,7 @@ publishing {
             def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
             def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            
+
             credentials {
                 username = System.env.usernameSonatype
                 password = System.env.passwordSonatype
@@ -105,11 +133,11 @@ publishing {
 }
 
 signing {
-    required { gradle.taskGraph.hasTask("publish") && ! version.endsWith('SNAPSHOT') }
+    required { gradle.taskGraph.hasTask("publish") && !version.endsWith('SNAPSHOT') }
     sign publishing.publications.mavenJava
 }
 gradle.taskGraph.whenReady { graph ->
-    if (graph.hasTask(publish) && ! version.endsWith('SNAPSHOT')) {
+    if (graph.hasTask(publish) && !version.endsWith('SNAPSHOT')) {
         if ((System.env.SIGN_KEY_ID == null) || (System.env.SIGN_SECRET_KEY_RINGFILE == null) || (System.env.SIGN_PASSWORD == null)) {
             throw new GradleException('You need to provide signing params in order to sign artifacts')
         } else {
