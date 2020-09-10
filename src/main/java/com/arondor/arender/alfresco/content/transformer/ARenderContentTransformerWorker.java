@@ -48,13 +48,12 @@ public class ARenderContentTransformerWorker implements ContentTransformerWorker
     public void transform(ContentReader reader, ContentWriter writer, TransformationOptions options) throws Exception
     {
         String uuid = UUID.randomUUID().toString();
-        try (InputStream contentInputStream = reader.getContentInputStream();
-             OutputStream contentOutputStream = writer.getContentOutputStream())
+        try (InputStream contentInputStream = reader.getContentInputStream())
         {
-            restClient.uploadDocument(uuid, contentInputStream);
+            restClient.uploadDocument(uuid, contentInputStream, reader.getMimetype());
             try (InputStream inputStream = restClient.getInputStream(uuid, "RENDERED"))
             {
-                IOUtils.copy(inputStream, contentOutputStream);
+                writer.putContent(inputStream);
             }
         }
     }
