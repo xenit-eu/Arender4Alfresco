@@ -25,7 +25,7 @@ configurations {
     integrationTestRuntimeClasspath.extendsFrom(alfrescoProvided)
 }
 
-def baseVersion = '1.0.1'
+def baseVersion = '1.0.2'
 def branchName = System.env.TRAVIS_BRANCH
 def isRelease = branchName != null && branchName.startsWith("release")
 if (isRelease)
