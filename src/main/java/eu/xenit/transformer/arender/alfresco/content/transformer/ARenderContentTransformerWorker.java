@@ -1,4 +1,4 @@
-package com.arondor.arender.alfresco.content.transformer;
+package eu.xenit.transformer.arender.alfresco.content.transformer;
 
 import java.io.InputStream;
 import java.util.UUID;
