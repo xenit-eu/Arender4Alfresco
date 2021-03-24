@@ -27,9 +27,6 @@ public class ContentTransformARenderRestClient {
 
     private final SimpleClientHttpRequestFactory clientHttpRequestFactory;
 
-    // upgrade transfer partial size, 8MB at a time
-    private static final int partialTransferBlockSize = 8 << 20;
-
     public ContentTransformARenderRestClient() {
         template = new RestTemplate();
         clientHttpRequestFactory = new SimpleClientHttpRequestFactory();

@@ -72,12 +72,8 @@ dependencies {
         exclude group: "org.springframework.social"
     }
 
-    integrationTestImplementation(
-            'org.junit.jupiter:junit-jupiter-api:5.4.2'
-    )
-    integrationTestRuntime(
-            'org.junit.jupiter:junit-jupiter-engine:5.4.2',
-    )
+    integrationTestImplementation('org.junit.jupiter:junit-jupiter-api:5.4.2')
+    integrationTestRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.2')
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
