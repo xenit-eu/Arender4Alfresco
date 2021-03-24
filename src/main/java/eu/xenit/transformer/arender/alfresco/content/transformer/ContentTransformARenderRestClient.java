@@ -67,7 +67,10 @@ public class ContentTransformARenderRestClient {
         uploadRequest.getHeaders().setContentType(MediaType.APPLICATION_OCTET_STREAM);
         IOUtils.copy(contentInputStream, uploadRequest.getBody());
 
+        LOGGER.debug("Uploading document with reference ID " + uuid);
         try (ClientHttpResponse uploadResponse = uploadRequest.execute()) {
+            LOGGER.debug("Received response for reference ID " + uuid + ": " + uploadResponse.getRawStatusCode() + " "
+                    + uploadResponse.getStatusText());
             if (uploadResponse.getStatusCode() != HttpStatus.OK) {
                 throw new IOException("Failed to upload document: " + uploadResponse.getStatusCode());
             }
@@ -75,10 +78,12 @@ public class ContentTransformARenderRestClient {
     }
 
     public InputStream getInputStream(String uuid, String selector) throws IOException {
+        LOGGER.debug("Performing layout for reference ID " + uuid);
         // wait for layout
         ResponseEntity<Resource> responseEntity = template.exchange(
                 UriComponentsBuilder.fromHttpUrl(address + "/document/{uuid}/layout").buildAndExpand(uuid).toUri(),
                 HttpMethod.GET, null, Resource.class);
+        LOGGER.debug("Received response for layout of reference ID " + uuid + ": " + responseEntity.getStatusCode());
         if (responseEntity.getStatusCode() != HttpStatus.OK) {
             throw new IOException("Could not obtain document layout");
         }
@@ -86,7 +91,10 @@ public class ContentTransformARenderRestClient {
         URI downloadUri = UriComponentsBuilder.fromHttpUrl(address + "accessor/getContent/raw/{uuid}/{selector}")
                 .buildAndExpand(uuid, selector).toUri();
         ClientHttpRequest downloadRequest = clientHttpRequestFactory.createRequest(downloadUri, HttpMethod.GET);
+        LOGGER.debug("Fetching content of reference ID " + uuid + " with selector " + selector);
         ClientHttpResponse downloadResponse = downloadRequest.execute();
+        LOGGER.debug("Received response for content of reference ID " + uuid + " with selector " + selector + ":"
+                + downloadResponse.getRawStatusCode() + " " + downloadResponse.getStatusText());
         if (downloadResponse.getStatusCode() != HttpStatus.OK) {
             HttpStatus status = downloadResponse.getStatusCode();
             downloadResponse.close();
