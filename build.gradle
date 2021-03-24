@@ -33,6 +33,7 @@ if (isRelease)
 else
     version = "$baseVersion-SNAPSHOT"
 
+sourceCompatibility = "1.8"
 
 repositories {
     mavenCentral()
