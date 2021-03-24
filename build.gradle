@@ -2,7 +2,10 @@ plugins {
     id 'java'
     id 'eu.xenit.amp' version '1.0.1'
     id 'eu.xenit.alfresco' version '1.0.1'
-    id 'de.marcphilipp.nexus-publish' version '0.4.0'
+    id 'eu.xenit.enterprise-conventions.oss' version '0.1.0'
+    id "be.vbgn.ci-detect" version '0.5.0'
+    id "org.sonarqube" version "3.1.1"
+    id "maven-publish"
     id "signing"
     id "idea"
 }
@@ -26,8 +29,7 @@ configurations {
 }
 
 def baseVersion = '1.0.2'
-def branchName = System.env.TRAVIS_BRANCH
-def isRelease = branchName != null && branchName.startsWith("release")
+def isRelease = ci.isCi() && ci.branch.startsWith("release")
 if (isRelease)
     version = "$baseVersion"
 else
@@ -118,36 +120,28 @@ publishing {
             }
         }
         mavenJava(MavenPublication) {
+            from components.java
             artifact amp
             artifact sourcesJar
         }
     }
-}
-
-nexusPublishing {
-    repositories {
-        sonatype {
-            username = System.env.usernameSonatype
-            password = System.env.passwordSonatype
-        }
-    }
-
-}
-
-signing {
-    required { gradle.taskGraph.hasTask("publish") && !version.endsWith('SNAPSHOT') }
-    sign publishing.publications.mavenJava
-}
-gradle.taskGraph.whenReady { graph ->
-    if (graph.hasTask(publish) && !version.endsWith('SNAPSHOT')) {
-        if ((System.env.SIGN_KEY_ID == null) || (System.env.SIGN_SECRET_KEY_RINGFILE == null) || (System.env.SIGN_PASSWORD == null)) {
-            throw new GradleException('You need to provide signing params in order to sign artifacts')
-        } else {
-            ext."signing.keyId" = (System.env.SIGN_KEY_ID != null ? System.env.SIGN_KEY_ID : '')
-            ext."signing.secretKeyRingFile" = (System.env.SIGN_SECRET_KEY_RINGFILE != null ? System.env.SIGN_SECRET_KEY_RINGFILE : '')
-            ext."signing.password" = (System.env.SIGN_PASSWORD != null ? System.env.SIGN_PASSWORD : '')
+    if (project.hasProperty('sonatypeUsername')) {
+        repositories {
+            if (version.endsWith("-SNAPSHOT")) {
+                sonatypeSnapshots {
+                    credentials {
+                        username project.property('sonatypeUsername')
+                        password project.property('sonatypePassword')
+                    }
+                }
+            } else {
+                sonatypeMavenCentral {
+                    credentials {
+                        username project.property('sonatypeUsername')
+                        password project.property('sonatypePassword')
+                    }
+                }
+            }
         }
     }
 }
-
-
