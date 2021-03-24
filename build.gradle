@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
     id 'eu.xenit.amp' version '1.0.1'
     id 'eu.xenit.alfresco' version '1.0.1'
     id 'eu.xenit.enterprise-conventions.oss' version '0.1.0'
@@ -7,7 +7,6 @@ plugins {
     id "org.sonarqube" version "3.1.1"
     id "maven-publish"
     id "signing"
-    id "idea"
 }
 
 description = 'Arender amp for Alfresco'
@@ -23,9 +22,8 @@ sourceSets {
 }
 
 configurations {
-    integrationTestCompileClasspath.extendsFrom(compileClasspath)
-    integrationTestRuntimeClasspath.extendsFrom(runtimeClasspath)
-    integrationTestRuntimeClasspath.extendsFrom(alfrescoProvided)
+    integrationTestImplementation.extendsFrom(implementation)
+    integrationTestImplementation.extendsFrom(alfrescoProvided)
 }
 
 def baseVersion = '1.0.2'
@@ -35,7 +33,11 @@ if (isRelease)
 else
     version = "$baseVersion-SNAPSHOT"
 
-sourceCompatibility = "1.8"
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    withSourcesJar()
+    withJavadocJar()
+}
 
 repositories {
     mavenCentral()
@@ -76,16 +78,6 @@ dependencies {
     integrationTestRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.2')
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
 publishing {
     publications {
         all {
@@ -118,7 +110,6 @@ publishing {
         mavenJava(MavenPublication) {
             from components.java
             artifact amp
-            artifact sourcesJar
         }
     }
     if (project.hasProperty('sonatypeUsername')) {
