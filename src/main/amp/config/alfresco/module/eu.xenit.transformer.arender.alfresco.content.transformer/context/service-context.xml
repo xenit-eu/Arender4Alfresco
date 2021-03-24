@@ -7,8 +7,11 @@
     <!-- The All -> PDF through ARender transformer Worker -->
     <bean id="transformer.worker.arender2pdf"
             class="eu.xenit.transformer.arender.alfresco.content.transformer.ARenderContentTransformerWorker">
-        <property name="arenderRenditionServerAddress"
-                value="${content.transformer.arender2pdf.arenderRenditionServerAddress}" />
+        <property name="restClient">
+            <bean class="eu.xenit.transformer.arender.alfresco.content.transformer.ContentTransformARenderRestClient">
+                <property name="address" value="${content.transformer.arender2pdf.arenderRenditionServerAddress}" />
+            </bean>
+        </property>
     </bean>
 
     <!-- The All -> PDF ARender transformer -->

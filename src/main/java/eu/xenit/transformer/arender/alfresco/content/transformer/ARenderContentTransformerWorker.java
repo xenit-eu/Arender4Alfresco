@@ -7,18 +7,12 @@ import org.alfresco.service.cmr.repository.ContentReader;
 import org.alfresco.service.cmr.repository.ContentWriter;
 import org.alfresco.service.cmr.repository.TransformationOptions;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.InitializingBean;
 
-public class ARenderContentTransformerWorker implements ContentTransformerWorker, InitializingBean {
+public class ARenderContentTransformerWorker implements ContentTransformerWorker {
 
     private static final Logger LOGGER = Logger.getLogger(ARenderContentTransformerWorker.class);
 
-    private final ContentTransformARenderRestClient restClient = new ContentTransformARenderRestClient();
-
-    private String arenderRenditionServerAddress = null;
-
-    public ARenderContentTransformerWorker() {
-    }
+    private ContentTransformARenderRestClient restClient;
 
     @Override
     public boolean isAvailable() {
@@ -55,16 +49,7 @@ public class ARenderContentTransformerWorker implements ContentTransformerWorker
         }
     }
 
-    @Override
-    public void afterPropertiesSet() {
-        restClient.setAddress(getArenderRenditionServerAddress());
-    }
-
-    public String getArenderRenditionServerAddress() {
-        return arenderRenditionServerAddress;
-    }
-
-    public void setArenderRenditionServerAddress(String arenderRenditionServerAddress) {
-        this.arenderRenditionServerAddress = arenderRenditionServerAddress;
+    public void setRestClient(ContentTransformARenderRestClient restClient) {
+        this.restClient = restClient;
     }
 }
