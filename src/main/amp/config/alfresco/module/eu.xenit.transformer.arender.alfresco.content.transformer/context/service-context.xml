@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <!-- The All -> PDF through ARender transformer Worker -->
+    <bean id="transformer.worker.arender2pdf"
+            class="eu.xenit.transformer.arender.alfresco.content.transformer.ARenderContentTransformerWorker">
+        <property name="restClient">
+            <bean class="eu.xenit.transformer.arender.alfresco.content.transformer.ContentTransformARenderRestClient">
+                <property name="address" value="${content.transformer.arender2pdf.arenderRenditionServerAddress}" />
+            </bean>
+        </property>
+    </bean>
+
+    <!-- The All -> PDF ARender transformer -->
+    <bean id="transformer.arender2pdf" class="org.alfresco.repo.content.transform.ProxyContentTransformer"
+            parent="baseContentTransformer">
+        <property name="worker">
+            <ref bean="transformer.worker.arender2pdf" />
+        </property>
+    </bean>
+</beans>
