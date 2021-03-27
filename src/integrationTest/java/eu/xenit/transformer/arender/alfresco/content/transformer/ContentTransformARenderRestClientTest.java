@@ -1,4 +1,4 @@
-package com.arondor.arender.alfresco.content.transformer;
+package eu.xenit.transformer.arender.alfresco.content.transformer;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
