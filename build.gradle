@@ -27,7 +27,7 @@ configurations {
 }
 
 def baseVersion = '1.0.3'
-def isRelease = ci.isCi() && ci.branch.startsWith("release")
+def isRelease = ci.isCi() && (ci.branch?.startsWith("release") || ci.isTag())
 if (isRelease)
     version = "$baseVersion"
 else
