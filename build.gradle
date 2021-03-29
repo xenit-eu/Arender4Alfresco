@@ -2,7 +2,7 @@ plugins {
     id 'java-library'
     id 'eu.xenit.amp' version '1.0.1'
     id 'eu.xenit.alfresco' version '1.0.1'
-    id 'eu.xenit.enterprise-conventions.oss' version '0.2.0-rc.1'
+    id 'eu.xenit.enterprise-conventions.oss' version '0.2.0-rc.2'
     id "be.vbgn.ci-detect" version '0.5.0'
     id "org.sonarqube" version "3.1.1"
     id 'org.ajoberstar.reckon' version '0.13.0'
