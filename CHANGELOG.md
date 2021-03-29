@@ -1,5 +1,11 @@
 # ARender for Alfresco - Changelog
 
+## 1.0.4 - 2021-03-29
+
+## Fixed
+
+* [#17](https://github.com/xenit-eu/Arender4Alfresco/pull/17) Fix publishing releases
+
 ## 1.0.3 - 2021-03-25
 
 ## Added
